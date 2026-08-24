@@ -14,14 +14,13 @@ namespace JWeiland\Jobboard\Controller;
 use JWeiland\Jobboard\Domain\Model\Job;
 use JWeiland\Jobboard\Domain\Model\JobArea;
 use JWeiland\Jobboard\Domain\Model\JobType;
+use JWeiland\Jobboard\Domain\Model\Search;
 use JWeiland\Jobboard\Domain\Repository\JobAreaRepository;
 use JWeiland\Jobboard\Domain\Repository\JobRepository;
 use JWeiland\Jobboard\Domain\Repository\JobTypeRepository;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
-use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 
 class JobboardController extends ActionController
 {
@@ -33,20 +32,15 @@ class JobboardController extends ActionController
 
     public function listAction(): ResponseInterface
     {
-        $searchCriteria = [];
-        if ($this->settings['jobAreas']) {
-            $searchCriteria['jobArea'] = GeneralUtility::intExplode(',', $this->settings['jobAreas']);
-        }
-
         $jobs = $this->excludeJobsWithoutSalaryInformation(
-            $this->jobRepository->findBySearchCriteria($searchCriteria),
+            $this->jobRepository->findBySettings($this->settings),
             (int)$this->settings['maxEntries'],
         );
 
         $this->view->assignMultiple([
             'jobs' => $jobs,
-            'jobAreas' => $this->getJobAreas(),
-            'jobTypes' => $this->jobTypeRepository->findAll(),
+            'jobAreas' => $this->getJobAreas($jobs),
+            'jobTypes' => $this->getJobTypes($jobs),
             'jobLocations' => $this->getJobLocations($jobs),
         ]);
 
@@ -58,31 +52,19 @@ class JobboardController extends ActionController
         ?JobType $jobType = null,
         string $address = '',
     ): ResponseInterface {
-        $searchCriteria = [];
+        $search = new Search($jobArea, $jobType, $address);
 
-        if ($jobArea) {
-            $searchCriteria['job_area'] = $jobArea;
-        }
+        $jobs = $this->excludeJobsWithoutSalaryInformation(
+            $this->jobRepository->findBySearch($search),
+            (int)$this->settings['maxEntries'],
+        );
 
-        if ($jobType) {
-            $searchCriteria['job_type'] = $jobType;
-        }
-
-        if ($address !== '') {
-            $searchCriteria['address'] = $address;
-        }
-
-        foreach ($searchCriteria as $key => $value) {
-            $this->view->assign('selected_' . $key, $value);
-        }
-
+        $this->view->assignMultiple($search->getSelectedValues());
         $this->view->assignMultiple([
-            'jobs' => $this->excludeJobsWithoutSalaryInformation(
-                $this->jobRepository->findBySearchCriteria($searchCriteria),
-                (int)$this->settings['maxEntries'],
-            ),
-            'jobAreas' => $this->getJobAreas(),
-            'jobTypes' => $this->jobTypeRepository->findAll(),
+            'jobs' => $jobs,
+            'jobAreas' => $this->getJobAreas($jobs),
+            'jobTypes' => $this->getJobTypes($jobs),
+            'jobLocations' => $this->getJobLocations($jobs),
         ]);
 
         return $this->htmlResponse();
@@ -120,15 +102,30 @@ class JobboardController extends ActionController
         return $eligibleJobs;
     }
 
-    protected function getJobAreas(): QueryResultInterface
+    /**
+     * @param Job[] $jobs
+     */
+    protected function getJobAreas(array $jobs): array
     {
-        if ($this->settings['jobAreas']) {
-            return $this->jobAreaRepository->findByUids(
-                GeneralUtility::intExplode(',', $this->settings['jobAreas']),
-            );
+        $jobAreas = [];
+        foreach ($jobs as $job) {
+            $jobAreas[$job->getJobArea()->getUid()] = $job->getJobArea()->getTitle();
         }
 
-        return $this->jobAreaRepository->findAll();
+        return $jobAreas;
+    }
+
+    /**
+     * @param Job[] $jobs
+     */
+    protected function getJobTypes(array $jobs): array
+    {
+        $jobTypes = [];
+        foreach ($jobs as $job) {
+            $jobTypes[$job->getJobType()->getUid()] = $job->getJobType()->getTitle();
+        }
+
+        return $jobTypes;
     }
 
     /**
@@ -144,6 +141,9 @@ class JobboardController extends ActionController
         return $jobLocations;
     }
 
+    /**
+     * @throws PageNotFoundException
+     */
     public function detailAction(Job $job): ResponseInterface
     {
         if (!$job->getHasSalaryInformation()) {
@@ -158,6 +158,7 @@ class JobboardController extends ActionController
 
         $this->view->assign('job', $job);
         $this->view->assign('settings', $this->settings);
+
         return $this->htmlResponse();
     }
 }

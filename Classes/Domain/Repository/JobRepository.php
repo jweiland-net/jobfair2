@@ -11,7 +11,10 @@ declare(strict_types=1);
 
 namespace JWeiland\Jobboard\Domain\Repository;
 
-use TYPO3\CMS\Core\Utility\MathUtility;
+use JWeiland\Jobboard\Domain\Model\JobArea;
+use JWeiland\Jobboard\Domain\Model\JobType;
+use JWeiland\Jobboard\Domain\Model\Search;
+use JWeiland\Jobboard\Domain\Model\ZipCity;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -26,10 +29,10 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 class JobRepository extends Repository
 {
     protected $defaultOrderings = [
-        'ending_date' => QueryInterface::ORDER_ASCENDING,
+        'endingDate' => QueryInterface::ORDER_ASCENDING,
     ];
 
-    public function findBySearchCriteria(array $searchCriteria, int $limit = 0): QueryResultInterface
+    public function findBySettings(array $settings, int $limit = 0): QueryResultInterface
     {
         $query = $this->createQuery();
 
@@ -38,31 +41,13 @@ class JobRepository extends Repository
         ];
 
         $andConstraint[] = $query->logicalOr(
-            $query->equals('ending_date', 0),
-            $query->greaterThanOrEqual('ending_date', new \DateTime()),
+            $query->equals('endingDate', 0),
+            $query->greaterThanOrEqual('endingDate', new \DateTime()),
         );
 
-        foreach ($searchCriteria as $property => $searchValue) {
-            if (is_array($searchValue)) {
-                $andConstraint[] = $query->in($property, $searchValue);
-                continue;
-            }
-
-            if ($property === 'address') {
-                $orConstraint = $this->buildOrConstraintForAddress($searchValue, $query);
-
-                if ($orConstraint !== []) {
-                    $andConstraint[] = $query->logicalOr(...$orConstraint);
-                }
-
-                continue;
-            }
-
-            if (is_object($searchValue)) {
-                $andConstraint[] = $query->equals($property, $searchValue);
-            } elseif (is_string($searchValue)) {
-                $andConstraint[] = $query->like($property, $searchValue);
-            }
+        $jobAreas = $settings['jobAreas'] ?? [];
+        if (is_array($jobAreas)) {
+            $andConstraint[] = $query->in('jobArea', $jobAreas);
         }
 
         if ($limit) {
@@ -72,50 +57,56 @@ class JobRepository extends Repository
         return $query->matching($query->logicalAnd(...$andConstraint))->execute();
     }
 
-    private function buildOrConstraintForAddress(string $searchValue, QueryInterface $query): array
+    public function findBySearch(Search $search, int $limit = 0): QueryResultInterface
     {
-        [$zip, $city] = $this->extractZipAndCityFromSearchValue($searchValue);
+        $query = $this->createQuery();
 
-        $orConstraint = [];
+        $andConstraint = [
+            $query->logicalNot($query->equals('title', '')),
+        ];
 
-        if ($zip) {
-            // For zip, we do an exact search
-            $orConstraint[] = $query->equals('address.zip', $zip);
+        $andConstraint[] = $query->logicalOr(
+            $query->equals('endingDate', 0),
+            $query->greaterThanOrEqual('endingDate', new \DateTime()),
+        );
+
+        if ($search->getJobArea() instanceof JobArea) {
+            $andConstraint[] = $query->equals('jobArea', $search->getJobArea());
         }
 
-        if ($city) {
-            // For city, we start a like search
+        if ($search->getJobType() instanceof JobType) {
+            $andConstraint[] = $query->equals('jobType', $search->getJobType());
+        }
+
+        $orConstraint = $this->buildOrConstraintForAddress($search->getZipCity(), $query);
+        if ($orConstraint !== []) {
+            $andConstraint[] = $query->logicalOr(...$orConstraint);
+        }
+
+        if ($limit) {
+            $query->setLimit($limit);
+        }
+
+        return $query->matching($query->logicalAnd(...$andConstraint))->execute();
+    }
+
+    private function buildOrConstraintForAddress(ZipCity $zipCity, QueryInterface $query): array
+    {
+        $orConstraint = [];
+
+        // For zip, we do an exact search
+        if ($zipCity->getZip()) {
+            $orConstraint[] = $query->equals('address.zip', $zipCity->getZip());
+        }
+
+        // For city, we start a like search
+        if ($zipCity->getCity()) {
             $orConstraint[] = $query->like(
                 'address.city',
-                '%' . addcslashes($city, '_%') . '%',
+                '%' . addcslashes($zipCity->getCity(), '_%') . '%',
             );
         }
 
         return $orConstraint;
-    }
-
-    /**
-     * A customer can select a value from auto-complete. In that case the search value
-     * has the following structure "zip - city". Without using auto-complete the
-     * value is either a zip or a city
-     *
-     * @param string $searchValue
-     * @return array
-     */
-    private function extractZipAndCityFromSearchValue(string $searchValue): array
-    {
-        if (str_contains($searchValue, '-')) {
-            [$zip, $city] = explode(' - ', $searchValue);
-        } elseif (MathUtility::canBeInterpretedAsInteger($searchValue)) {
-            // Sure, zip is not an integer because of leading zero, but it
-            // still can be interpreted as an integer 03524 -> 3524
-            $zip = $searchValue;
-            $city = null;
-        } else {
-            $zip = null;
-            $city = $searchValue;
-        }
-
-        return [$zip, $city];
     }
 }

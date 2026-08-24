@@ -15,18 +15,14 @@ use JWeiland\Jobboard\Domain\Model\Job;
 use JWeiland\Jobboard\Domain\Model\SalaryGrade;
 use JWeiland\Jobboard\Domain\Repository\JobRepository;
 use PHPUnit\Framework\Attributes\Test;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
 
 /**
  * Test case.
  *
  * Verifies that Job::getSalaryRangeMin()/getSalaryRangeMax() (and the two
- * boolean helpers built on top of them) work against records loaded through
- * Extbase persistence - not just against manually assembled objects like in
- * the unit test. This is the part a unit test cannot prove: that the
- * "salary_grade" group field is actually mapped back to a SalaryGrade object
- * by the DataMapper.
+ * boolean helpers built on top of them) correctly resolve the "salary_grade"
+ * group field once it is mapped back to a SalaryGrade object by the DataMapper.
  */
 class JobRepositoryTest extends FunctionalTestCase
 {
@@ -44,7 +40,7 @@ class JobRepositoryTest extends FunctionalTestCase
 
         $this->importCSVDataSet(__DIR__ . '/../../Fixtures/JobWithSalaryInformation.csv');
 
-        $this->subject = GeneralUtility::makeInstance(JobRepository::class);
+        $this->subject = $this->get(JobRepository::class);
     }
 
     protected function tearDown(): void

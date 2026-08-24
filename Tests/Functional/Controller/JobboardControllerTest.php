@@ -13,6 +13,7 @@ namespace JWeiland\Jobboard\Tests\Functional\Controller;
 
 use JWeiland\Jobboard\Controller\JobboardController;
 use JWeiland\Jobboard\Domain\Model\Job;
+use JWeiland\Jobboard\Domain\Model\Search;
 use JWeiland\Jobboard\Domain\Repository\JobAreaRepository;
 use JWeiland\Jobboard\Domain\Repository\JobRepository;
 use JWeiland\Jobboard\Domain\Repository\JobTypeRepository;
@@ -82,7 +83,7 @@ class JobboardControllerTest extends FunctionalTestCase
         $method->setAccessible(true);
 
         /** @var Job[] $eligibleJobs */
-        $eligibleJobs = $method->invoke($this->subject, $jobRepository->findBySearchCriteria([]), $limit);
+        $eligibleJobs = $method->invoke($this->subject, $jobRepository->findBySearch(new Search(null, null, '')), $limit);
 
         return array_map(
             static fn(Job $job): string => $job->getTitle(),
