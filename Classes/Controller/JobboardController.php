@@ -38,14 +38,18 @@ class JobboardController extends ActionController
             $searchCriteria['jobArea'] = GeneralUtility::intExplode(',', $this->settings['jobAreas']);
         }
 
+        $jobs = $this->excludeJobsWithoutSalaryInformation(
+            $this->jobRepository->findBySearchCriteria($searchCriteria),
+            (int)$this->settings['maxEntries'],
+        );
+
         $this->view->assignMultiple([
-            'jobs' => $this->excludeJobsWithoutSalaryInformation(
-                $this->jobRepository->findBySearchCriteria($searchCriteria),
-                (int)$this->settings['maxEntries'],
-            ),
+            'jobs' => $jobs,
             'jobAreas' => $this->getJobAreas(),
             'jobTypes' => $this->jobTypeRepository->findAll(),
+            'jobLocations' => $this->getJobLocations($jobs),
         ]);
+
         return $this->htmlResponse();
     }
 
@@ -125,6 +129,19 @@ class JobboardController extends ActionController
         }
 
         return $this->jobAreaRepository->findAll();
+    }
+
+    /**
+     * @param Job[] $jobs
+     */
+    protected function getJobLocations(array $jobs): array
+    {
+        $jobLocations = [];
+        foreach ($jobs as $job) {
+            $jobLocations[$job->getAddress()->getCity()] = $job->getAddress()->getCity();
+        }
+
+        return $jobLocations;
     }
 
     public function detailAction(Job $job): ResponseInterface
