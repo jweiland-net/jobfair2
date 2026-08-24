@@ -225,6 +225,10 @@
 				<source>Job Type</source>
 				<target>Beschäftigungsarten</target>
 			</trans-unit>
+			<trans-unit id="search.job_location">
+				<source>Job Location</source>
+				<target>Arbeitsort</target>
+			</trans-unit>
 
 			<trans-unit id="poi_collection.apply_until">
 				<source>Apply until</source>

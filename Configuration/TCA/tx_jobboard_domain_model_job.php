@@ -437,7 +437,6 @@ return [
                 'type' => 'datetime',
                 'default' => 0,
                 'format' => 'date',
-                'required' => true,
             ],
         ],
         'application_deadline' => [
