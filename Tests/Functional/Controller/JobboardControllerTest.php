@@ -83,7 +83,7 @@ class JobboardControllerTest extends FunctionalTestCase
         $method->setAccessible(true);
 
         /** @var Job[] $eligibleJobs */
-        $eligibleJobs = $method->invoke($this->subject, $jobRepository->findBySearch(new Search(null, null, '')), $limit);
+        $eligibleJobs = $method->invoke($this->subject, $jobRepository->findBySearch(new Search(null, null, '', '')), $limit);
 
         return array_map(
             static fn(Job $job): string => $job->getTitle(),

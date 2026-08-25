@@ -51,8 +51,9 @@ class JobboardController extends ActionController
         ?JobArea $jobArea = null,
         ?JobType $jobType = null,
         string $address = '',
+        string $searchWord = '',
     ): ResponseInterface {
-        $search = new Search($jobArea, $jobType, $address);
+        $search = new Search($jobArea, $jobType, $address, $searchWord);
 
         $jobs = $this->excludeJobsWithoutSalaryInformation(
             $this->jobRepository->findBySearch($search),

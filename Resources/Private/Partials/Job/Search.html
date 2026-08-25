@@ -16,6 +16,9 @@
                     <f:render partial="Types/Textfield" arguments="{label: 'search.city_or_zip', name: 'address', value: selected_address}"/>
                 </f:else>
             </f:if>
+            <f:if condition="{settings.showFreeTextSearch}">
+                <f:render partial="Types/Textfield" arguments="{label: 'search.search_word', name: 'searchWord', value: selected_search_word}"/>
+            </f:if>
             <div class="form-group">
                 <f:form.submit class="submit-btn" value="{f:translate(key: 'search.submit')}"/>
             </div>

@@ -29,7 +29,7 @@ class SearchTest extends UnitTestCase
         $jobArea = new JobArea();
         $jobType = new JobType();
 
-        $subject = new Search($jobArea, $jobType, 'Pforzheim');
+        $subject = new Search($jobArea, $jobType, 'Pforzheim', '');
 
         self::assertSame($jobArea, $subject->getJobArea());
         self::assertSame($jobType, $subject->getJobType());
@@ -38,7 +38,7 @@ class SearchTest extends UnitTestCase
     #[Test]
     public function constructWithoutJobAreaAndJobTypeReturnsNull(): void
     {
-        $subject = new Search(null, null, 'Pforzheim');
+        $subject = new Search(null, null, 'Pforzheim', '');
 
         self::assertNull($subject->getJobArea());
         self::assertNull($subject->getJobType());
@@ -48,7 +48,7 @@ class SearchTest extends UnitTestCase
     public function getZipCityReturnsZipCityBuiltFromAddress(): void
     {
         // "<zip> - <city>" is the exact format the frontend autocomplete sends.
-        $subject = new Search(null, null, '76133 - Pforzheim');
+        $subject = new Search(null, null, '76133 - Pforzheim', '');
 
         self::assertEquals(
             new ZipCity('76133 - Pforzheim'),
@@ -57,13 +57,22 @@ class SearchTest extends UnitTestCase
     }
 
     #[Test]
-    public function getSelectedValuesWithoutJobAreaAndJobTypeReturnsOnlyAddress(): void
+    public function getSearchWordReturnsConstructorValue(): void
     {
-        $subject = new Search(null, null, 'Pforzheim');
+        $subject = new Search(null, null, '', 'Bahnhofstraße Pforzheim');
+
+        self::assertSame('Bahnhofstraße Pforzheim', $subject->getSearchWord());
+    }
+
+    #[Test]
+    public function getSelectedValuesWithoutJobAreaAndJobTypeReturnsOnlyAddressAndSearchWord(): void
+    {
+        $subject = new Search(null, null, 'Pforzheim', 'Bahnhofstraße');
 
         self::assertSame(
             [
                 'selected_address' => 'Pforzheim',
+                'selected_search_word' => 'Bahnhofstraße',
             ],
             $subject->getSelectedValues(),
         );
@@ -72,11 +81,12 @@ class SearchTest extends UnitTestCase
     #[Test]
     public function getSelectedValuesWithJobAreaAlsoReturnsJobAreaUid(): void
     {
-        $subject = new Search(new JobArea(), null, 'Pforzheim');
+        $subject = new Search(new JobArea(), null, 'Pforzheim', '');
 
         self::assertSame(
             [
                 'selected_address' => 'Pforzheim',
+                'selected_search_word' => '',
                 'selected_job_area' => null,
             ],
             $subject->getSelectedValues(),
@@ -86,11 +96,12 @@ class SearchTest extends UnitTestCase
     #[Test]
     public function getSelectedValuesWithJobTypeAlsoReturnsJobTypeUid(): void
     {
-        $subject = new Search(null, new JobType(), 'Pforzheim');
+        $subject = new Search(null, new JobType(), 'Pforzheim', '');
 
         self::assertSame(
             [
                 'selected_address' => 'Pforzheim',
+                'selected_search_word' => '',
                 'selected_job_type' => null,
             ],
             $subject->getSelectedValues(),
@@ -100,11 +111,12 @@ class SearchTest extends UnitTestCase
     #[Test]
     public function getSelectedValuesWithJobAreaAndJobTypeReturnsAllSelectedValues(): void
     {
-        $subject = new Search(new JobArea(), new JobType(), 'Pforzheim');
+        $subject = new Search(new JobArea(), new JobType(), 'Pforzheim', '');
 
         self::assertSame(
             [
                 'selected_address' => 'Pforzheim',
+                'selected_search_word' => '',
                 'selected_job_area' => null,
                 'selected_job_type' => null,
             ],

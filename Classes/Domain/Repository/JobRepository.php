@@ -15,6 +15,7 @@ use JWeiland\Jobboard\Domain\Model\JobArea;
 use JWeiland\Jobboard\Domain\Model\JobType;
 use JWeiland\Jobboard\Domain\Model\Search;
 use JWeiland\Jobboard\Domain\Model\ZipCity;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Persistence\QueryInterface;
 use TYPO3\CMS\Extbase\Persistence\QueryResultInterface;
 use TYPO3\CMS\Extbase\Persistence\Repository;
@@ -83,6 +84,11 @@ class JobRepository extends Repository
             $andConstraint[] = $query->logicalOr(...$orConstraint);
         }
 
+        $andConstraint = [
+            ...$andConstraint,
+            ...$this->buildAndConstraintForSearchWords($search->getSearchWord(), $query),
+        ];
+
         if ($limit) {
             $query->setLimit($limit);
         }
@@ -108,5 +114,32 @@ class JobRepository extends Repository
         }
 
         return $orConstraint;
+    }
+
+    /**
+     * Each word of the free text search is required to match (AND), but a single
+     * word may match any of several Job fields (OR) - we don't know upfront which
+     * part of the search word belongs to which field.
+     */
+    private function buildAndConstraintForSearchWords(string $searchWord, QueryInterface $query): array
+    {
+        $andConstraint = [];
+
+        foreach (GeneralUtility::trimExplode(' ', $searchWord, true) as $word) {
+            $likeWord = '%' . addcslashes($word, '_%') . '%';
+
+            $andConstraint[] = $query->logicalOr(
+                $query->like('title', $likeWord),
+                $query->like('description', $likeWord),
+                $query->like('offer', $likeWord),
+                $query->like('requirements', $likeWord),
+                $query->like('furtherInformation', $likeWord),
+                $query->like('applicationGuidelines', $likeWord),
+                $query->like('address.address', $likeWord),
+                $query->like('address.city', $likeWord),
+            );
+        }
+
+        return $andConstraint;
     }
 }
