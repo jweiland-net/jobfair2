@@ -18,8 +18,7 @@
                     <settings.maxEntries>
                         <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:maxEntries</label>
                         <config>
-                            <type>input</type>
-                            <eval>trim,int</eval>
+                            <type>number</type>
                             <default>0</default>
                         </config>
                     </settings.maxEntries>
@@ -46,13 +45,29 @@
                             <renderType>checkboxToggle</renderType>
                             <items type="array">
                                 <numIndex index="0" type="array">
-                                    <numIndex index="0">LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:showSearch1</numIndex>
-                                    <numIndex index="1">1</numIndex>
+                                    <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:showSearch1</label>
                                 </numIndex>
                             </items>
                             <default>1</default>
                         </config>
                     </settings.showSearch>
+                    <settings.addressSearchMode>
+                        <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:addressSearchMode</label>
+                        <config>
+                            <type>radio</type>
+                            <items type="array">
+                                <numIndex index="0" type="array">
+                                    <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:addressSearchMode.zipCity</label>
+                                    <value>zipCity</value>
+                                </numIndex>
+                                <numIndex index="1" type="array">
+                                    <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:addressSearchMode.jobLocation</label>
+                                    <value>jobLocation</value>
+                                </numIndex>
+                            </items>
+                            <default>zipCity</default>
+                        </config>
+                    </settings.addressSearchMode>
                     <settings.showFreeTextSearch>
                         <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:showFreeTextSearch</label>
                         <config>
@@ -60,8 +75,7 @@
                             <renderType>checkboxToggle</renderType>
                             <items type="array">
                                 <numIndex index="0" type="array">
-                                    <numIndex index="0">LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:showFreeTextSearch1</numIndex>
-                                    <numIndex index="1">1</numIndex>
+                                    <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:showFreeTextSearch1</label>
                                 </numIndex>
                             </items>
                             <default>1</default>

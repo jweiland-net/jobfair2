@@ -35,6 +35,18 @@
 				<source>Search</source>
 				<target>Suche</target>
 			</trans-unit>
+			<trans-unit id="addressSearchMode">
+				<source>Address search field</source>
+				<target>Adressfeld für die Suche</target>
+			</trans-unit>
+			<trans-unit id="addressSearchMode.zipCity">
+				<source>Search field with suggestions (zip code or city)</source>
+				<target>Suchfeld mit Vorschlägen (PLZ oder Ort)</target>
+			</trans-unit>
+			<trans-unit id="addressSearchMode.jobLocation">
+				<source>Job location select box</source>
+				<target>Auswahlfeld Einsatzort</target>
+			</trans-unit>
 			<trans-unit id="showFreeTextSearch">
 				<source>Show free text search</source>
 				<target>Zeige Freitextsuche</target>

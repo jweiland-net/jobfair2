@@ -19,6 +19,7 @@ final readonly class Search
         private ?JobArea $jobArea,
         private ?JobType $jobType,
         private string $address,
+        private string $searchWord,
     ) {
         $this->zipCity = new ZipCity($address);
     }
@@ -38,6 +39,11 @@ final readonly class Search
         return $this->zipCity;
     }
 
+    public function getSearchWord(): string
+    {
+        return $this->searchWord;
+    }
+
     /**
      * Can be used to assign to Template via assignMultiple()
      */
@@ -45,6 +51,7 @@ final readonly class Search
     {
         $selectedValues = [
             'selected_address' => $this->address,
+            'selected_search_word' => $this->searchWord,
         ];
 
         if ($this->jobArea instanceof JobArea) {

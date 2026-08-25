@@ -24,8 +24,9 @@ use TYPO3\TestingFramework\Core\Functional\FunctionalTestCase;
  * Test case.
  *
  * Covers JobRepository::findBySearch(): the "title is not empty" and "not yet
- * ended" base filters, the job area/job type equality filters, and the zip
- * (exact) / city (LIKE) address filter.
+ * ended" base filters, the job area/job type equality filters, the zip
+ * (exact) / city (LIKE) address filter, and the free text search matching
+ * title, address or Job RTE fields word by word, combined with logical AND.
  */
 class JobRepositorySearchTest extends FunctionalTestCase
 {
@@ -86,7 +87,7 @@ class JobRepositorySearchTest extends FunctionalTestCase
                 'Job in Pforzheim but other job type',
                 'Job with matching zip in another city',
             ],
-            $this->findJobTitles(new Search(null, null, '')),
+            $this->findJobTitles(new Search(null, null, '', '')),
         );
     }
 
@@ -100,7 +101,7 @@ class JobRepositorySearchTest extends FunctionalTestCase
                 'Job in Pforzheim but other job area',
                 'Job in Pforzheim but other job type',
             ],
-            $this->findJobTitles(new Search(null, null, '76133')),
+            $this->findJobTitles(new Search(null, null, '76133', '')),
         );
     }
 
@@ -116,7 +117,7 @@ class JobRepositorySearchTest extends FunctionalTestCase
                 'Job in Pforzheim but other job area',
                 'Job in Pforzheim but other job type',
             ],
-            $this->findJobTitles(new Search(null, null, 'Pforzheim')),
+            $this->findJobTitles(new Search(null, null, 'Pforzheim', '')),
         );
     }
 
@@ -137,7 +138,7 @@ class JobRepositorySearchTest extends FunctionalTestCase
                 'Job in Pforzheim but other job type',
                 'Job with matching zip in another city',
             ],
-            $this->findJobTitles(new Search(null, null, '76199 - Pforzheim')),
+            $this->findJobTitles(new Search(null, null, '76199 - Pforzheim', '')),
         );
     }
 
@@ -155,7 +156,7 @@ class JobRepositorySearchTest extends FunctionalTestCase
                 'Job in Pforzheim but other job type',
                 'Job with matching zip in another city',
             ],
-            $this->findJobTitles(new Search($jobArea, null, '')),
+            $this->findJobTitles(new Search($jobArea, null, '', '')),
         );
     }
 
@@ -173,7 +174,7 @@ class JobRepositorySearchTest extends FunctionalTestCase
                 'Job in Pforzheim but other job area',
                 'Job with matching zip in another city',
             ],
-            $this->findJobTitles(new Search(null, $jobType, '')),
+            $this->findJobTitles(new Search(null, $jobType, '', '')),
         );
     }
 
@@ -188,7 +189,88 @@ class JobRepositorySearchTest extends FunctionalTestCase
                 'Job with exact zip match',
                 'Job with far future ending date in Pforzheim',
             ],
-            $this->findJobTitles(new Search($jobArea, $jobType, '76133')),
+            $this->findJobTitles(new Search($jobArea, $jobType, '76133', '')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordMatchesTitle(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job with exact zip match'],
+            $this->findJobTitles(new Search(null, null, '', 'exact')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordMatchesAddressStreet(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job in a different city'],
+            $this->findJobTitles(new Search(null, null, '', 'Marktplatz')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordMatchesAddressCity(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job with matching zip in another city'],
+            $this->findJobTitles(new Search(null, null, '', 'Illingen')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordMatchesDescription(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job with same city but different zip'],
+            $this->findJobTitles(new Search(null, null, '', 'Flexible')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordMatchesOffer(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job in a different city'],
+            $this->findJobTitles(new Search(null, null, '', 'Firmenwagen')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordMatchesRequirements(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job in city name containing search term'],
+            $this->findJobTitles(new Search(null, null, '', 'Führerschein')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordMatchesFurtherInformation(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job with far future ending date in Pforzheim'],
+            $this->findJobTitles(new Search(null, null, '', 'Weiterbildung')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordMatchesApplicationGuidelines(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job in Pforzheim but other job area'],
+            $this->findJobTitles(new Search(null, null, '', 'Bewerbung')),
+        );
+    }
+
+    #[Test]
+    public function findBySearchBySearchWordWithMultipleWordsCombinesThemWithLogicalAnd(): void
+    {
+        self::assertEqualsCanonicalizing(
+            ['Job with exact zip match'],
+            $this->findJobTitles(new Search(null, null, '', 'Pforzheim exact')),
         );
     }
 }
