@@ -6,15 +6,7 @@
 <div class="grid">
     <div class="col-4_md-12">
         <f:if condition="{settings.showSearch}">
-            <f:render partial="Job/Search" arguments="{
-                jobAreas: jobAreas,
-                jobTypes: jobTypes,
-                jobLocations: jobLocations,
-                selected_job_area: selected_job_area,
-                selected_job_type: selected_job_type,
-                selected_address: selected_address,
-                selected_search_word: selected_search_word
-            }"/>
+            <f:render partial="Job/Search" arguments="{_all}"/>
         </f:if>
     </div>
 
