@@ -53,6 +53,23 @@
                             <default>1</default>
                         </config>
                     </settings.showSearch>
+                    <settings.addressSearchMode>
+                        <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:addressSearchMode</label>
+                        <config>
+                            <type>radio</type>
+                            <items type="array">
+                                <numIndex index="0" type="array">
+                                    <numIndex index="0">LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:addressSearchMode.zipCity</numIndex>
+                                    <numIndex index="1">zipCity</numIndex>
+                                </numIndex>
+                                <numIndex index="1" type="array">
+                                    <numIndex index="0">LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:addressSearchMode.jobLocation</numIndex>
+                                    <numIndex index="1">jobLocation</numIndex>
+                                </numIndex>
+                            </items>
+                            <default>zipCity</default>
+                        </config>
+                    </settings.addressSearchMode>
                     <settings.showFreeTextSearch>
                         <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:showFreeTextSearch</label>
                         <config>

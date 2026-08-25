@@ -8,8 +8,14 @@
         <f:form action="search">
             <f:render partial="Types/Select" arguments="{label: 'search.job_area', options: jobAreas, name: 'jobArea', value: selected_job_area}"/>
             <f:render partial="Types/Select" arguments="{label: 'search.job_type', options: jobTypes, name: 'jobType', value: selected_job_type}"/>
-            <f:render partial="Types/Select" arguments="{label: 'search.job_location', options: jobLocations, name: 'jobLocation', value: selected_job_location}"/>
-            <f:render partial="Types/Textfield" arguments="{label: 'search.city_or_zip', name: 'address', value: selected_address}"/>
+            <f:if condition="{settings.addressSearchMode} == 'jobLocation'">
+                <f:then>
+                    <f:render partial="Types/Select" arguments="{label: 'search.job_location', options: jobLocations, name: 'address', value: selected_address}"/>
+                </f:then>
+                <f:else>
+                    <f:render partial="Types/Textfield" arguments="{label: 'search.city_or_zip', name: 'address', value: selected_address}"/>
+                </f:else>
+            </f:if>
             <div class="form-group">
                 <f:form.submit class="submit-btn" value="{f:translate(key: 'search.submit')}"/>
             </div>

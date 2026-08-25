@@ -27,6 +27,15 @@
 			<trans-unit id="showSearch1">
 				<source>Search</source>
 			</trans-unit>
+			<trans-unit id="addressSearchMode">
+				<source>Address search field</source>
+			</trans-unit>
+			<trans-unit id="addressSearchMode.zipCity">
+				<source>Search field with suggestions (zip code or city)</source>
+			</trans-unit>
+			<trans-unit id="addressSearchMode.jobLocation">
+				<source>Job location select box</source>
+			</trans-unit>
 			<trans-unit id="showFreeTextSearch">
 				<source>Show free text search</source>
 			</trans-unit>
