@@ -46,3 +46,8 @@ composer.lock
 /.Build
 /composer.json.orig
 /composer.json.testing
+
+# Ignore rector's isolated composer state
+/Build/rector/.Build
+/Build/rector/composer.json.orig
+/Build/rector/composer.json.testing
