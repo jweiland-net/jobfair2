@@ -1,0 +1,13 @@
+"pages"
+,"uid","pid","title","slug","deleted","hidden","doktype","is_siteroot"
+,1,0,"Root","/",0,0,1,1
+
+"tt_content"
+,"uid","pid","CType","header","colPos"
+,1,1,"jobfair2_jobfair","Old Jobfair plugin",0
+,2,1,"text","Unrelated content element",0
+
+"be_groups"
+,"uid","pid","title","explicit_allowdeny"
+,1,0,"Editors","tt_content:CType:text,tt_content:CType:jobfair2_jobfair,pages:doktype:1"
+,2,0,"Unrelated group","pages:doktype:1"
