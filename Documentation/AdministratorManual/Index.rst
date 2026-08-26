@@ -108,6 +108,50 @@ needed, and the search scope can not be influenced by the request.
     never parses TypoScript, only Site Settings.
 
 
+..  _admin-manual-list-layout:
+
+Alternative list layout: cards
+==============================
+
+List and search render jobs as a table
+(:file:`Resources/Private/Partials/Types/Table.html`) by default. A
+card-based alternative ships alongside it in
+:file:`Resources/Private/Partials/Types/Card.html` - both accept the same
+`objects` argument, so switching between them only means changing which
+partial :file:`Templates/Jobboard/List.html` and
+:file:`Templates/Jobboard/Search.html` render, nothing else in either
+template has to change.
+
+To switch to it, add your own `templateRootPaths` on top of Jobboard's,
+for example in your site package's TypoScript setup:
+
+..  code-block:: typoscript
+
+    plugin.tx_jobboard.view {
+        templateRootPaths.100 = EXT:my_sitepackage/Resources/Private/Extensions/Jobboard/Templates/
+    }
+
+Then place your own copies of :file:`Templates/Jobboard/List.html` and/or
+:file:`Templates/Jobboard/Search.html` at that path, with the
+`f:render partial="Types/Table"` line swapped for `Types/Card`:
+
+..  code-block:: html
+
+    <f:if condition="{jobs}">
+        <f:then>
+            <f:render partial="Types/Card" arguments="{objects: jobs}"/>
+        </f:then>
+        <f:else>
+            <p>{f:translate(key: 'search.no_jobs_found')}</p>
+        </f:else>
+    </f:if>
+
+..  note::
+    Only that one line needs to change - copy the rest of the shipped
+    :file:`List.html`/:file:`Search.html` (layout, search form, empty
+    result message) as-is.
+
+
 ..  _admin-manual-import:
 
 Importing jobs automatically
