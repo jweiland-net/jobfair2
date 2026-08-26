@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the package jweiland/jobboard.
  *
@@ -11,10 +13,10 @@ if (!defined('TYPO3')) {
     die('Access denied.');
 }
 
-$GLOBALS['TCA']['tx_jobboard_domain_model_salarytable']['columns']['starttime']['description'] =
-    'LLL:EXT:jobboard/Resources/Private/Language/locallang_db.xlf:tx_jobboard_domain_model_salarytable.starttime.description';
+$GLOBALS['TCA']['tx_jobboard_domain_model_salarytable']['columns']['starttime']['description']
+    = 'LLL:EXT:jobboard/Resources/Private/Language/locallang_db.xlf:tx_jobboard_domain_model_salarytable.starttime.description';
 $GLOBALS['TCA']['tx_jobboard_domain_model_salarytable']['columns']['starttime']['config']['behaviour']['allowLanguageSynchronization'] = true;
 
-$GLOBALS['TCA']['tx_jobboard_domain_model_salarytable']['columns']['endtime']['description'] =
-    'LLL:EXT:jobboard/Resources/Private/Language/locallang_db.xlf:tx_jobboard_domain_model_salarytable.endtime.description';
+$GLOBALS['TCA']['tx_jobboard_domain_model_salarytable']['columns']['endtime']['description']
+    = 'LLL:EXT:jobboard/Resources/Private/Language/locallang_db.xlf:tx_jobboard_domain_model_salarytable.endtime.description';
 $GLOBALS['TCA']['tx_jobboard_domain_model_salarytable']['columns']['endtime']['config']['behaviour']['allowLanguageSynchronization'] = true;
