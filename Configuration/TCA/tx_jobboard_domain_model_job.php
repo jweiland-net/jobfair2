@@ -516,21 +516,6 @@ return [
                 'type' => 'passthrough',
             ],
         ],
-        'is_internal' => [
-            'exclude' => true,
-            'label' => 'LLL:EXT:jobboard/Resources/Private/Language/locallang_db.xlf:tx_jobboard_domain_model_job.is_internal',
-            'config' => [
-                'type' => 'select',
-                'renderType' => 'selectSingle',
-                'items' => [
-                    ['label' => 'LLL:EXT:jobboard/Resources/Private/Language/locallang_db.xlf:tx_jobboard_domain_model_job.is_internal.no', 'value' => 0],
-                    ['label' => 'LLL:EXT:jobboard/Resources/Private/Language/locallang_db.xlf:tx_jobboard_domain_model_job.is_internal.yes', 'value' => 1],
-                ],
-                'minitems' => 1,
-                'maxItems' => 1,
-                'default' => 0,
-            ],
-        ],
         'is_import' => [
             'exclude' => true,
             'label' => 'LLL:EXT:jobboard/Resources/Private/Language/locallang_db.xlf:tx_jobboard_domain_model_job.is_import',

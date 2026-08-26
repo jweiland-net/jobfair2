@@ -7,18 +7,6 @@
 				<source>General</source>
 				<target>Allgemein</target>
 			</trans-unit>
-			<trans-unit id="isInternal">
-				<source>Is Internal?</source>
-				<target>Ist Intern?</target>
-			</trans-unit>
-			<trans-unit id="isInternal.no">
-				<source>No</source>
-				<target>Nein</target>
-			</trans-unit>
-			<trans-unit id="isInternal.yes">
-				<source>Yes</source>
-				<target>Ja</target>
-			</trans-unit>
 			<trans-unit id="jobAreas">
 				<source>Job areas</source>
 				<target>Berufsfelder</target>

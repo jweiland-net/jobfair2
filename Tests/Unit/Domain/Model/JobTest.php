@@ -931,24 +931,6 @@ class JobTest extends UnitTestCase
     }
 
     #[Test]
-    public function getIsInternalInitiallyReturnsFalse(): void
-    {
-        self::assertFalse(
-            $this->subject->getIsInternal(),
-        );
-    }
-
-    #[Test]
-    public function setIsInternalSetsIsInternal(): void
-    {
-        $this->subject->setIsInternal(true);
-
-        self::assertTrue(
-            $this->subject->getIsInternal(),
-        );
-    }
-
-    #[Test]
     public function getSalaryRangeMinAndMaxWithoutAnySalaryInformationReturnZero(): void
     {
         self::assertSame(0.0, $this->subject->getSalaryRangeMin());

@@ -250,18 +250,6 @@
 				<source>Link to vacancy of MHM HR</source>
 				<target>Link zum Stellenangebot bei MHM HR</target>
 			</trans-unit>
-			<trans-unit id="tx_jobboard_domain_model_job.is_internal">
-				<source>Is internal?</source>
-				<target>Ist intern?</target>
-			</trans-unit>
-			<trans-unit id="tx_jobboard_domain_model_job.is_internal.no">
-				<source>No</source>
-				<target>Nein</target>
-			</trans-unit>
-			<trans-unit id="tx_jobboard_domain_model_job.is_internal.yes">
-				<source>Yes</source>
-				<target>Ja</target>
-			</trans-unit>
 			<trans-unit id="tx_jobboard_domain_model_job.is_import">
 				<source>Is imported record?</source>
 				<target>Importierter Datensatz?</target>

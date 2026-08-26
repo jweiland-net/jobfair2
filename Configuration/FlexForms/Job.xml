@@ -22,14 +22,6 @@
                             <default>0</default>
                         </config>
                     </settings.maxEntries>
-                    <settings.isInternal>
-                        <label>LLL:EXT:jobboard/Resources/Private/Language/FlexForms.xlf:isInternal</label>
-                        <config>
-                            <type>check</type>
-                            <renderType>checkboxToggle</renderType>
-                            <default>0</default>
-                        </config>
-                    </settings.isInternal>
                 </el>
             </ROOT>
         </sDEF>

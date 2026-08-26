@@ -66,11 +66,11 @@ adding ad-hoc fields elsewhere in the template.
   `add`/`remove` methods in addition to `get`/`set` (e.g. `addPdfFile()`/`removePdfFile()`, singularized
   from the plural property name where applicable).
 - **Boolean getters and Fluid**: if a property name already starts with `is`/`has` (e.g. `isImport`,
-  `isInternal`, `hasSteps`), Fluid's `{job.isImport}` still resolves via a `get`-prefixed method
+  `hasSteps`), Fluid's `{job.isImport}` still resolves via a `get`-prefixed method
   (`getIsImport()`), never a bare `isImport()`/`hasSteps()`. A bare method is invisible to the Fluid/Extbase
   object accessor and either silently resolves to `null` or throws "Cannot access protected property" once
   it falls through to direct property access. Every boolean getter in this codebase is named accordingly
-  (`getIsImport()`, `getIsInternal()`, `getHasSteps()`) - keep this in mind for any new boolean property,
+  (`getIsImport()`, `getHasSteps()`) - keep this in mind for any new boolean property,
   it will not surface as a PHP error until the property is actually used from a Fluid template.
 - **`select` fields with an `MM` table keep their local column** (e.g. `Job::$benefits`'s underlying
   `benefits` int column) - TYPO3's `DataHandler` writes the relation *count* into it on every save, it is
