@@ -189,15 +189,6 @@
 			<trans-unit id="tx_jobboard_domain_model_job.link">
 				<source>Link to vacancy of MHM HR</source>
 			</trans-unit>
-			<trans-unit id="tx_jobboard_domain_model_job.is_internal">
-				<source>Is internal?</source>
-			</trans-unit>
-			<trans-unit id="tx_jobboard_domain_model_job.is_internal.no">
-				<source>No</source>
-			</trans-unit>
-			<trans-unit id="tx_jobboard_domain_model_job.is_internal.yes">
-				<source>Yes</source>
-			</trans-unit>
 			<trans-unit id="tx_jobboard_domain_model_job.is_import">
 				<source>Is imported record?</source>
 			</trans-unit>

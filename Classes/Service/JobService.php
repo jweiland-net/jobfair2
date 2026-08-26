@@ -71,7 +71,6 @@ readonly class JobService
             'job_type' => $this->jobTypeService->getJobTypeUid(
                 $importedJob->getValueByPath('custom_select_2/de'),
             ),
-            'is_internal' => 0,
         ];
 
         foreach ($apiModel->getMapping() as $dbColumn => $apiMapping) {

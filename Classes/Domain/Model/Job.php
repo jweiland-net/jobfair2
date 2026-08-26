@@ -111,8 +111,6 @@ class Job extends AbstractEntity
 
     protected string $link = '';
 
-    protected bool $isInternal = false;
-
     public function __construct()
     {
         $this->benefits = new ObjectStorage();
@@ -597,16 +595,6 @@ class Job extends AbstractEntity
     public function setLink(string $link): void
     {
         $this->link = $link;
-    }
-
-    public function getIsInternal(): bool
-    {
-        return $this->isInternal;
-    }
-
-    public function setIsInternal(bool $isInternal): void
-    {
-        $this->isInternal = $isInternal;
     }
 
     /**
