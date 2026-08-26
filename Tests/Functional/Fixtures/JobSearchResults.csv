@@ -18,8 +18,8 @@
 
 "tx_jobboard_domain_model_jobrole"
 ,"uid","pid","title"
-,1,2,"Fachkraft"
-,2,2,"Auszubildender"
+,1,2,"Specialist"
+,2,2,"Apprentice"
 
 "tx_jobboard_domain_model_jobtype"
 ,"uid","pid","title"
