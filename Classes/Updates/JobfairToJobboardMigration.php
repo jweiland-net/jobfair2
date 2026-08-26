@@ -29,7 +29,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * manually via "Admin Tools > Maintenance > Analyze Database Structure > Remove".
  */
 #[UpgradeWizard('jweilandJobboardJobfairToJobboardMigration')]
-final class JobfairToJobboardMigration implements UpgradeWizardInterface
+final readonly class JobfairToJobboardMigration implements UpgradeWizardInterface
 {
     private const OLD_PREFIX = 'tx_jobfair2_domain_model_';
     private const NEW_PREFIX = 'tx_jobboard_domain_model_';
@@ -57,7 +57,7 @@ final class JobfairToJobboardMigration implements UpgradeWizardInterface
     private const JOB_FAL_FIELDS = ['employer_logo', 'header_logo', 'tender_file', 'pdf_files'];
 
     public function __construct(
-        private readonly ConnectionPool $connectionPool,
+        private ConnectionPool $connectionPool,
     ) {}
 
     public function getTitle(): string
@@ -208,7 +208,7 @@ final class JobfairToJobboardMigration implements UpgradeWizardInterface
         $oldQueryBuilder = $this->connectionPool->getQueryBuilderForTable($oldTable);
         $oldQueryBuilder->getRestrictions()->removeAll();
         $oldUids = array_map(
-            'intval',
+            intval(...),
             $oldQueryBuilder->select('uid')->from($oldTable)->executeQuery()->fetchFirstColumn(),
         );
 
@@ -219,7 +219,7 @@ final class JobfairToJobboardMigration implements UpgradeWizardInterface
         $newQueryBuilder = $this->connectionPool->getQueryBuilderForTable($newTable);
         $newQueryBuilder->getRestrictions()->removeAll();
         $existingUids = array_map(
-            'intval',
+            intval(...),
             $newQueryBuilder
                 ->select('uid')
                 ->from($newTable)

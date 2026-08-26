@@ -87,7 +87,7 @@ readonly class ImportService
         return $apiModels;
     }
 
-    private function saveImportedJob(JobModel $importedJob, $jobUidOrNew, ApiModelInterface $apiModel): ?int
+    private function saveImportedJob(JobModel $importedJob, string|int $jobUidOrNew, ApiModelInterface $apiModel): ?int
     {
         $dataHandler = $this->getDataHandler();
 
