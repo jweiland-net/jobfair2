@@ -103,6 +103,25 @@ final class JobboardControllerTest extends FunctionalTestCase
         return (string)$response->getBody();
     }
 
+    private function fetchSearchFormPageBody(): string
+    {
+        $response = $this->executeFrontendSubRequest(
+            (new InternalRequest('https://example.com/'))->withPageId(4),
+        );
+
+        return (string)$response->getBody();
+    }
+
+    private function assertAppearsBefore(string $expectedFirst, string $expectedSecond, string $haystack): void
+    {
+        self::assertStringContainsString($expectedFirst, $haystack);
+        self::assertStringContainsString($expectedSecond, $haystack);
+        self::assertLessThan(
+            strpos($haystack, $expectedSecond),
+            strpos($haystack, $expectedFirst),
+        );
+    }
+
     private function buildDetailActionRequest(int $jobUid): InternalRequest
     {
         $queryString = '&id=1'
@@ -227,6 +246,28 @@ final class JobboardControllerTest extends FunctionalTestCase
             2,
             $containedTitles,
         );
+    }
+
+    #[Test]
+    public function jobAreaSelectOptionsAreSortedByLabelRegardlessOfUidOrder(): void
+    {
+        // JobArea uid 1 ("Warehouse") is attached to the job listed before uid 2's
+        // job ("Assembly"), so without sorting the options would render in that,
+        // alphabetically wrong, order. f:form.select's sortByOptionLabel handles
+        // this in Fluid, not JobboardController::getJobAreas().
+        $this->assertAppearsBefore('Assembly', 'Warehouse', $this->fetchSearchFormPageBody());
+    }
+
+    #[Test]
+    public function jobRoleSelectOptionsAreSortedByLabelRegardlessOfUidOrder(): void
+    {
+        $this->assertAppearsBefore('Apprentice', 'Working Student', $this->fetchSearchFormPageBody());
+    }
+
+    #[Test]
+    public function jobTypeSelectOptionsAreSortedByLabelRegardlessOfUidOrder(): void
+    {
+        $this->assertAppearsBefore('Full-time', 'Temporary', $this->fetchSearchFormPageBody());
     }
 
     #[Test]

@@ -116,8 +116,6 @@ class JobboardController extends ActionController
             }
         }
 
-        asort($jobs, SORT_NATURAL);
-
         return $jobAreas;
     }
 
@@ -133,8 +131,6 @@ class JobboardController extends ActionController
             }
         }
 
-        asort($jobs, SORT_NATURAL);
-
         return $jobRoles;
     }
 
@@ -149,8 +145,6 @@ class JobboardController extends ActionController
                 $jobTypes[$job->getJobType()->getUid()] = $job->getJobType()->getTitle();
             }
         }
-
-        asort($jobs, SORT_NATURAL);
 
         return $jobTypes;
     }
