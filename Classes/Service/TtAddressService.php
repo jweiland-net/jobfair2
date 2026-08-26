@@ -26,8 +26,6 @@ readonly class TtAddressService
 {
     use ConnectionPoolTrait;
 
-    private const TABLE = 'tt_address';
-
     public function getPreparedAddressByImportedJob(JobModel $importedJob, ApiModelInterface $apiModel): array
     {
         $primaryLocation = $importedJob->getPrimaryLocation();
@@ -47,19 +45,6 @@ readonly class TtAddressService
             'city' => $primaryLocation->getValueByPath('city'),
             'import_key' => $primaryLocation->getValueByPath('technical_name'),
         ];
-    }
-
-    /**
-     * GeneralUtility::xml2array assigns a single array element directly to its parent:
-     * job -> locations -> location
-     *
-     * But if there are multiple locations, xml2array assigns the arrays by key:
-     * job -> locations -> 0 -> location
-     * --> Not tested, but MHM HR told me that it is possible to define multiple locations
-     */
-    private function getFirstLocation(array $locations): array
-    {
-        return array_key_exists('location', $locations) ? $locations['location'] : current($locations);
     }
 
     private function getAddressUid(string $technicalName, int $storagePid): int|string

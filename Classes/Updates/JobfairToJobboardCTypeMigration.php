@@ -27,7 +27,7 @@ use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
  * see {@see JWeilandJobfair2CTypeMigration}). The base class would therefore never find a match.
  */
 #[UpgradeWizard('jweilandJobboardJobfairToJobboardCTypeMigration')]
-final class JobfairToJobboardCTypeMigration implements UpgradeWizardInterface
+final readonly class JobfairToJobboardCTypeMigration implements UpgradeWizardInterface
 {
     private const TABLE_CONTENT = 'tt_content';
     private const TABLE_BACKEND_USER_GROUPS = 'be_groups';
@@ -35,7 +35,7 @@ final class JobfairToJobboardCTypeMigration implements UpgradeWizardInterface
     private const NEW_CTYPE = 'jobboard_jobboard';
 
     public function __construct(
-        private readonly ConnectionPool $connectionPool,
+        private ConnectionPool $connectionPool,
     ) {}
 
     public function getTitle(): string

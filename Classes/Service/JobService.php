@@ -16,6 +16,7 @@ use JWeiland\Jobboard\ApiModel\ApiModelInterface;
 use JWeiland\Jobboard\ApiModel\JobModel;
 use JWeiland\Jobboard\Configuration\ImportConfiguration;
 use JWeiland\Jobboard\Traits\ConnectionPoolTrait;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 /**
@@ -45,13 +46,13 @@ readonly class JobService
                 ->select('uid')
                 ->from(self::TABLE)->where($queryBuilder->expr()->eq(
                     'pid',
-                    $queryBuilder->createNamedParameter($apiModel->getStoragePid(), \TYPO3\CMS\Core\Database\Connection::PARAM_INT),
+                    $queryBuilder->createNamedParameter($apiModel->getStoragePid(), Connection::PARAM_INT),
                 ), $queryBuilder->expr()->eq(
                     'vacancy_id',
                     $queryBuilder->createNamedParameter($apiModel->getName() . '_' . $vacancyId),
                 ))->executeQuery()
                 ->fetchAssociative();
-        } catch (\Doctrine\DBAL\Exception $e) {
+        } catch (\Doctrine\DBAL\Exception) {
             $jobRecord = false;
         }
 
@@ -140,7 +141,7 @@ readonly class JobService
             ->select('uid')
             ->from(self::TABLE)->where($queryBuilder->expr()->eq(
                 'pid',
-                $queryBuilder->createNamedParameter($importConfiguration->getStorage(), \TYPO3\CMS\Core\Database\Connection::PARAM_INT),
+                $queryBuilder->createNamedParameter($importConfiguration->getStorage(), Connection::PARAM_INT),
             ), $queryBuilder->expr()->neq(
                 'vacancy_id',
                 $queryBuilder->createNamedParameter(''),
