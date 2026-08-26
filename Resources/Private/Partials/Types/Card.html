@@ -1,0 +1,52 @@
+<html lang="en"
+      xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      data-namespace-typo3-fluid="true">
+
+<f:comment>
+    Alternative rendering to Types/Table: renders each job as a card instead of a
+    table row. List/Search render Types/Table by default, but either template can
+    render this partial instead - keep it even if nothing in this extension itself
+    references it yet, a consuming project may switch to it via template override.
+</f:comment>
+
+<div class="cards-responsive">
+    <f:for each="{objects}" as="job">
+        <div class="jobboard-job" data-jobboard-uid="{job.uid}">
+            <div class="jobboard-jobdetails">
+                <p>
+                    <f:if condition="{job.jobArea}">
+                        <span>{job.jobArea.title}</span>
+                    </f:if>
+                    <f:if condition="{job.jobRole}">
+                        <span>{job.jobRole.title}</span>
+                    </f:if>
+                    <f:if condition="{job.applicationDeadline}">
+                        <span>{f:translate(key: 'job.applicationDeadline')}: {job.applicationDeadline -> f:format.date(format: 'd.m.Y')}</span>
+                    </f:if>
+                </p>
+            </div>
+            <div class="jobboard-content">
+                <h2>{job.title}</h2>
+                <f:format.raw>
+                    {job.description -> f:format.crop(maxCharacters: 400)}
+                </f:format.raw>
+            </div>
+            <div class="jobboard-footer">
+                <f:if condition="{job.link}">
+                    <f:then>
+                        <f:link.external class="btn-outline" uri="{job.link}" target="_blank">{f:translate(key: 'job.readMore')}</f:link.external>
+                    </f:then>
+                    <f:else>
+                        <f:link.action class="btn-outline" action="detail" arguments="{job: job}">{f:translate(key: 'job.readMore')}</f:link.action>
+                    </f:else>
+                </f:if>
+                <f:if condition="{settings.pidOfApplicationForm}">
+                    <p>
+                        <f:link.page pageUid="{settings.pidOfApplicationForm}" class="btn-primary" additionalParams="{jobuid: job.uid}">{f:translate(key: 'job.applyOnline')}</f:link.page>
+                    </p>
+                </f:if>
+            </div>
+        </div>
+    </f:for>
+</div>
+</html>

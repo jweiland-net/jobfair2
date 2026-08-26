@@ -123,6 +123,12 @@
 			<trans-unit id="job.applicationDeadline">
 				<source>Application deadline</source>
 			</trans-unit>
+			<trans-unit id="job.readMore">
+				<source>Read more</source>
+			</trans-unit>
+			<trans-unit id="job.applyOnline">
+				<source>Apply online</source>
+			</trans-unit>
 			<trans-unit id="job.applicationGuidelines">
 				<source>Application guidelines</source>
 			</trans-unit>
