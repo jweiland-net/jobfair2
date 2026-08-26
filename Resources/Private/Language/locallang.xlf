@@ -168,6 +168,9 @@
 			<trans-unit id="search.job_area">
 				<source>Job Area</source>
 			</trans-unit>
+			<trans-unit id="search.job_role">
+				<source>Position</source>
+			</trans-unit>
 			<trans-unit id="search.job_type">
 				<source>Job Type</source>
 			</trans-unit>

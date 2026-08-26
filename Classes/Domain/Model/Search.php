@@ -17,6 +17,7 @@ final readonly class Search
 
     public function __construct(
         private ?JobArea $jobArea,
+        private ?JobRole $jobRole,
         private ?JobType $jobType,
         private string $address,
         private string $searchWord,
@@ -27,6 +28,11 @@ final readonly class Search
     public function getJobArea(): ?JobArea
     {
         return $this->jobArea;
+    }
+
+    public function getJobRole(): ?JobRole
+    {
+        return $this->jobRole;
     }
 
     public function getJobType(): ?JobType
@@ -56,6 +62,10 @@ final readonly class Search
 
         if ($this->jobArea instanceof JobArea) {
             $selectedValues['selected_job_area'] = $this->jobArea->getUid();
+        }
+
+        if ($this->jobRole instanceof JobRole) {
+            $selectedValues['selected_job_role'] = $this->jobRole->getUid();
         }
 
         if ($this->jobType instanceof JobType) {

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace JWeiland\Jobboard\Domain\Repository;
 
 use JWeiland\Jobboard\Domain\Model\JobArea;
+use JWeiland\Jobboard\Domain\Model\JobRole;
 use JWeiland\Jobboard\Domain\Model\JobType;
 use JWeiland\Jobboard\Domain\Model\Search;
 use JWeiland\Jobboard\Domain\Model\ZipCity;
@@ -73,6 +74,10 @@ class JobRepository extends Repository
 
         if ($search->getJobArea() instanceof JobArea) {
             $andConstraint[] = $query->equals('jobArea', $search->getJobArea());
+        }
+
+        if ($search->getJobRole() instanceof JobRole) {
+            $andConstraint[] = $query->equals('jobRole', $search->getJobRole());
         }
 
         if ($search->getJobType() instanceof JobType) {
