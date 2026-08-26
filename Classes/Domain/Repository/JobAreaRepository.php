@@ -16,8 +16,12 @@ use TYPO3\CMS\Extbase\Persistence\Repository;
 
 class JobAreaRepository extends Repository
 {
-    public function findByUids(array $uids): QueryResultInterface
+    public function findByUids(array $uids): QueryResultInterface|array
     {
+        if ($uids === []) {
+            return [];
+        }
+
         $query = $this->createQuery();
         $query->matching(
             $query->in('uid', $uids),
