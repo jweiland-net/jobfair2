@@ -47,7 +47,7 @@ class JobRepository extends Repository
         );
 
         $jobAreas = $settings['jobAreas'] ?? [];
-        if (is_array($jobAreas)) {
+        if (is_array($jobAreas) && $jobAreas !== []) {
             $andConstraint[] = $query->in('jobArea', $jobAreas);
         }
 

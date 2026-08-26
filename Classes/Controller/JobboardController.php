@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace JWeiland\Jobboard\Controller;
 
+use JWeiland\Jobboard\Domain\Model\Address;
 use JWeiland\Jobboard\Domain\Model\Job;
 use JWeiland\Jobboard\Domain\Model\JobArea;
 use JWeiland\Jobboard\Domain\Model\JobType;
@@ -34,7 +35,7 @@ class JobboardController extends ActionController
     {
         $jobs = $this->excludeJobsWithoutSalaryInformation(
             $this->jobRepository->findBySettings($this->settings),
-            (int)$this->settings['maxEntries'],
+            (int)($this->settings['maxEntries'] ?? 0),
         );
 
         $this->view->assignMultiple([
@@ -57,7 +58,7 @@ class JobboardController extends ActionController
 
         $jobs = $this->excludeJobsWithoutSalaryInformation(
             $this->jobRepository->findBySearch($search),
-            (int)$this->settings['maxEntries'],
+            (int)($this->settings['maxEntries'] ?? 0),
         );
 
         $this->view->assignMultiple($search->getSelectedValues());
@@ -110,7 +111,9 @@ class JobboardController extends ActionController
     {
         $jobAreas = [];
         foreach ($jobs as $job) {
-            $jobAreas[$job->getJobArea()->getUid()] = $job->getJobArea()->getTitle();
+            if ($job->getJobArea() instanceof JobArea) {
+                $jobAreas[$job->getJobArea()->getUid()] = $job->getJobArea()->getTitle();
+            }
         }
 
         return $jobAreas;
@@ -123,7 +126,9 @@ class JobboardController extends ActionController
     {
         $jobTypes = [];
         foreach ($jobs as $job) {
-            $jobTypes[$job->getJobType()->getUid()] = $job->getJobType()->getTitle();
+            if ($job->getJobType() instanceof JobType) {
+                $jobTypes[$job->getJobType()->getUid()] = $job->getJobType()->getTitle();
+            }
         }
 
         return $jobTypes;
@@ -136,7 +141,9 @@ class JobboardController extends ActionController
     {
         $jobLocations = [];
         foreach ($jobs as $job) {
-            $jobLocations[$job->getAddress()->getCity()] = $job->getAddress()->getCity();
+            if ($job->getAddress() instanceof Address) {
+                $jobLocations[$job->getAddress()->getCity()] = $job->getAddress()->getCity();
+            }
         }
 
         return $jobLocations;
