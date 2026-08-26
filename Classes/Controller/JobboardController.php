@@ -14,11 +14,10 @@ namespace JWeiland\Jobboard\Controller;
 use JWeiland\Jobboard\Domain\Model\Address;
 use JWeiland\Jobboard\Domain\Model\Job;
 use JWeiland\Jobboard\Domain\Model\JobArea;
+use JWeiland\Jobboard\Domain\Model\JobRole;
 use JWeiland\Jobboard\Domain\Model\JobType;
 use JWeiland\Jobboard\Domain\Model\Search;
-use JWeiland\Jobboard\Domain\Repository\JobAreaRepository;
 use JWeiland\Jobboard\Domain\Repository\JobRepository;
-use JWeiland\Jobboard\Domain\Repository\JobTypeRepository;
 use Psr\Http\Message\ResponseInterface;
 use TYPO3\CMS\Core\Error\Http\PageNotFoundException;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -27,8 +26,6 @@ class JobboardController extends ActionController
 {
     public function __construct(
         protected JobRepository $jobRepository,
-        protected JobAreaRepository $jobAreaRepository,
-        protected JobTypeRepository $jobTypeRepository,
     ) {}
 
     public function listAction(): ResponseInterface
@@ -41,6 +38,7 @@ class JobboardController extends ActionController
         $this->view->assignMultiple([
             'jobs' => $jobs,
             'jobAreas' => $this->getJobAreas($jobs),
+            'jobRoles' => $this->getJobRoles($jobs),
             'jobTypes' => $this->getJobTypes($jobs),
             'jobLocations' => $this->getJobLocations($jobs),
         ]);
@@ -50,11 +48,12 @@ class JobboardController extends ActionController
 
     public function searchAction(
         ?JobArea $jobArea = null,
+        ?JobRole $jobRole = null,
         ?JobType $jobType = null,
         string $address = '',
         string $searchWord = '',
     ): ResponseInterface {
-        $search = new Search($jobArea, $jobType, $address, $searchWord);
+        $search = new Search($jobArea, $jobRole, $jobType, $address, $searchWord);
 
         $jobs = $this->excludeJobsWithoutSalaryInformation(
             $this->jobRepository->findBySearch($search),
@@ -65,6 +64,7 @@ class JobboardController extends ActionController
         $this->view->assignMultiple([
             'jobs' => $jobs,
             'jobAreas' => $this->getJobAreas($jobs),
+            'jobRoles' => $this->getJobRoles($jobs),
             'jobTypes' => $this->getJobTypes($jobs),
             'jobLocations' => $this->getJobLocations($jobs),
         ]);
@@ -116,7 +116,26 @@ class JobboardController extends ActionController
             }
         }
 
+        asort($jobs, SORT_NATURAL);
+
         return $jobAreas;
+    }
+
+    /**
+     * @param Job[] $jobs
+     */
+    protected function getJobRoles(array $jobs): array
+    {
+        $jobRoles = [];
+        foreach ($jobs as $job) {
+            if ($job->getJobRole() instanceof JobRole) {
+                $jobRoles[$job->getJobRole()->getUid()] = $job->getJobRole()->getTitle();
+            }
+        }
+
+        asort($jobs, SORT_NATURAL);
+
+        return $jobRoles;
     }
 
     /**
@@ -130,6 +149,8 @@ class JobboardController extends ActionController
                 $jobTypes[$job->getJobType()->getUid()] = $job->getJobType()->getTitle();
             }
         }
+
+        asort($jobs, SORT_NATURAL);
 
         return $jobTypes;
     }

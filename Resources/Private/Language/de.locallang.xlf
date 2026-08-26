@@ -221,6 +221,10 @@
 				<source>Job Area</source>
 				<target>Berufsfelder</target>
 			</trans-unit>
+			<trans-unit id="search.job_role">
+				<source>Position</source>
+				<target>Position</target>
+			</trans-unit>
 			<trans-unit id="search.job_type">
 				<source>Job Type</source>
 				<target>Beschäftigungsarten</target>

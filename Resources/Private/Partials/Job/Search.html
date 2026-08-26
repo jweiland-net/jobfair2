@@ -7,6 +7,7 @@
         <legend class="fontsize3">{f:translate(key: 'search.label')}</legend>
         <f:form action="search">
             <f:render partial="Types/Select" arguments="{label: 'search.job_area', options: jobAreas, name: 'jobArea', value: selected_job_area}"/>
+            <f:render partial="Types/Select" arguments="{label: 'search.job_role', options: jobRoles, name: 'jobRole', value: selected_job_role}"/>
             <f:render partial="Types/Select" arguments="{label: 'search.job_type', options: jobTypes, name: 'jobType', value: selected_job_type}"/>
             <f:if condition="{settings.addressSearchMode} == 'jobLocation'">
                 <f:then>
