@@ -2,6 +2,12 @@
 ,"uid","pid","title","slug","deleted","hidden","doktype","is_siteroot"
 ,1,0,"Root","/",0,0,1,1
 ,2,1,"Storage for jobs","/storage",0,0,254,0
+,3,1,"List page with maxEntries limit","/list-with-limit",0,0,1,0
+
+"tt_content"
+,"uid","pid","CType","header","colPos","pi_flexform"
+,1,1,"jobboard_jobboard","Jobboard",0,"<T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""settings.maxEntries""><value index=""vDEF"">0</value></field><field index=""settings.showSearch""><value index=""vDEF"">0</value></field></language></sheet></data></T3FlexForms>"
+,2,3,"jobboard_jobboard","Jobboard limited",0,"<T3FlexForms><data><sheet index=""sDEF""><language index=""lDEF""><field index=""settings.maxEntries""><value index=""vDEF"">2</value></field><field index=""settings.showSearch""><value index=""vDEF"">0</value></field></language></sheet></data></T3FlexForms>"
 
 "tt_address"
 ,"uid","pid","company","city","zip"
