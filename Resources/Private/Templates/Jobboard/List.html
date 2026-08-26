@@ -10,6 +10,7 @@
 
     <f:if condition="{jobs}">
         <f:then>
+            <f:comment>Types/Card can be rendered here instead for a card-based layout.</f:comment>
             <f:render partial="Types/Table" arguments="{objects: jobs}"/>
         </f:then>
         <f:else>

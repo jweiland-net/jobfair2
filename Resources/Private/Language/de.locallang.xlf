@@ -162,6 +162,14 @@
 				<source>Application deadline</source>
 				<target>Bewerbungsfrist</target>
 			</trans-unit>
+			<trans-unit id="job.readMore">
+				<source>Read more</source>
+				<target>Weiterlesen</target>
+			</trans-unit>
+			<trans-unit id="job.applyOnline">
+				<source>Apply online</source>
+				<target>Online bewerben</target>
+			</trans-unit>
 			<trans-unit id="job.applicationGuidelines">
 				<source>Application guidelines</source>
 				<target>Hinweise zur Bewerbung</target>
