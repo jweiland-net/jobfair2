@@ -1,0 +1,12 @@
+"pages"
+,"uid","pid","title","slug","deleted","hidden","doktype","is_siteroot"
+,1,0,"Root","/",0,0,1,1
+,2,1,"Job storage","/jobs",0,0,254,0
+,34,1,"Extra address storage","/addresses",0,0,254,0
+,99,1,"Unrelated storage elsewhere on the site","/other",0,0,254,0
+
+"tt_address"
+,"uid","pid","company","city","zip"
+,1,2,"Employer in job storage","Pforzheim","76133"
+,2,34,"Employer in extra address storage","Pforzheim-Nord","76135"
+,3,99,"Unrelated address elsewhere on the site","Pforzheim-Sued","76199"

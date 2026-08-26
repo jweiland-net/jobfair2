@@ -17,7 +17,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Http\JsonResponse;
+use TYPO3\CMS\Core\Site\Entity\Site;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class AddressSearchMiddleware implements MiddlewareInterface
 {
@@ -40,24 +43,33 @@ class AddressSearchMiddleware implements MiddlewareInterface
 
     public function getAvailableCities(ServerRequestInterface $request): array
     {
+        $storagePids = $this->getStoragePids($request);
+        if ($storagePids === []) {
+            return [];
+        }
+
+        $zipCity = $this->getZipCityFromRequest($request);
+        if ($zipCity === '') {
+            return [];
+        }
+
         $queryBuilder = $this->getQueryBuilderForTable(self::TABLE);
+        $likeZipOrCity = $queryBuilder->createNamedParameter(
+            '%' . $queryBuilder->escapeLikeWildcards($zipCity) . '%',
+        );
 
         $queryResult = $queryBuilder
             ->select('zip', 'city')
             ->from(self::TABLE)
             ->where(
-                $queryBuilder->expr()->like(
-                    'zip',
-                    $queryBuilder->createNamedParameter(
-                        '%' . $queryBuilder->escapeLikeWildcards($request->getParsedBody()['zipCity']) . '%',
+                $queryBuilder->expr()->and(
+                    $queryBuilder->expr()->or(
+                        $queryBuilder->expr()->like('zip', $likeZipOrCity),
+                        $queryBuilder->expr()->like('city', $likeZipOrCity),
                     ),
-                ),
-            )
-            ->orWhere(
-                $queryBuilder->expr()->like(
-                    'city',
-                    $queryBuilder->createNamedParameter(
-                        '%' . $queryBuilder->escapeLikeWildcards($request->getParsedBody()['zipCity']) . '%',
+                    $queryBuilder->expr()->in(
+                        'pid',
+                        $queryBuilder->createNamedParameter($storagePids, Connection::PARAM_INT_ARRAY),
                     ),
                 ),
             )
@@ -73,5 +85,38 @@ class AddressSearchMiddleware implements MiddlewareInterface
         }
 
         return $availableCities;
+    }
+
+    /**
+     * "zipCity" comes straight from the request body of an anonymous frontend
+     * request and must never be trusted to be a string.
+     */
+    private function getZipCityFromRequest(ServerRequestInterface $request): string
+    {
+        $parsedBody = $request->getParsedBody();
+        $zipCity = is_array($parsedBody) ? ($parsedBody['zipCity'] ?? '') : '';
+
+        return is_string($zipCity) ? $zipCity : '';
+    }
+
+    /**
+     * Reads "jobboard.storagePid" from the Site Settings instead of accepting it
+     * from the request, so the pages this search is allowed to touch can not be
+     * widened by a manipulated request - see Documentation for details.
+     *
+     * @return int[]
+     */
+    private function getStoragePids(ServerRequestInterface $request): array
+    {
+        $site = $request->getAttribute('site');
+        if (!$site instanceof Site) {
+            return [];
+        }
+
+        return GeneralUtility::intExplode(
+            ',',
+            (string)$site->getSettings()->get('jobboard.storagePid', '0'),
+            true,
+        );
     }
 }

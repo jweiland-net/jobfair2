@@ -63,6 +63,53 @@ Settings`:
     :name: jobboard-site-settings
 
 
+..  _admin-manual-address-search-scope:
+
+Address search and page scoping
+================================
+
+The city/zip field of the frontend search form is not a plain text input -
+while the visitor types, it queries :t3ext:`tt_address` for autocomplete
+suggestions through
+:php:class:`\JWeiland\Jobboard\Middleware\AddressSearchMiddleware`. This
+search deliberately never learns which storage pages it may look at from
+the request itself.
+
+..  important::
+    :t3ext:`tt_address` is a shared table. On many installations it also
+    stores addresses that have nothing to do with Jobboard - other
+    address book entries, internal contacts, or otherwise personal data
+    outside the scope of this extension. Without a page restriction, the
+    autocomplete search would work as an unauthenticated lookup across
+    every visible :t3ext:`tt_address` record on the whole site, not just
+    job locations.
+
+To avoid this, the storage pages are never sent through a template, a
+`data-*` attribute or JavaScript as part of the request - any value that
+travels through the browser like that can be rewritten by whoever controls
+the client, no matter how it got there. Instead,
+:php:class:`\JWeiland\Jobboard\Middleware\AddressSearchMiddleware` reads
+`jobboard.storagePid` directly from the current site's Site Settings via
+the PSR-7 request
+(:php:`$request->getAttribute('site')->getSettings()`), the very setting
+configured above under :ref:`admin-manual-settings`. TYPO3's
+:php:class:`\TYPO3\CMS\Frontend\Middleware\SiteResolver` runs very early
+in the request stack, well before Jobboard's own middleware, so the site
+and its settings are already available - no extra transfer of the page ID
+is needed, and nothing about the search scope can be influenced by the
+request.
+
+..  note::
+    This is also why `jobboard.storagePid` is a comma-separated list of
+    page IDs (`type: string`) rather than a single page picker. If
+    :t3ext:`tt_address` records used for job locations live in more than
+    one folder, list every additional page ID directly in this setting
+    under :guilabel:`Site Configuration > Settings`, e.g. `0,34,67`.
+    Extending `plugin.tx_jobboard.persistence.storagePid` via TypoScript
+    instead would only narrow down the job list/search, not this
+    middleware - it never parses TypoScript, only Site Settings.
+
+
 ..  _admin-manual-import:
 
 Importing jobs automatically

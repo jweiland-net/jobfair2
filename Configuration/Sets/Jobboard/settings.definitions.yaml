@@ -30,9 +30,9 @@ settings:
   jobboard.storagePid:
     label: 'Default storage PID'
     category: jobboard.pages
-    description: 'Folder that stores all jobs'
-    type: page
-    default: 0
+    description: 'Comma-separated list of page IDs that store all jobs. If tt_address records for job locations live in additional folders, list those PIDs here too - the address autocomplete search only looks at these pages.'
+    type: string
+    default: '0'
   jobboard.pidOfDetailPage:
     label: 'Pid of Detail Page'
     category: jobboard.pages
